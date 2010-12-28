@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Conway on Coffee!</title>
+   
+    <script type="text/coffeescript">
+    class SparseMatrix
+      constructor: ->
+        @data = {}
+
+      #returns the value if it is there.  undefined if otherwise.  
+      get: (x,y) -> 
+        @data[x]?[y]
+      set: (x,y,value) ->
+        if value == null
+          @unset(x,y)
+        else
+          @data[x] ?= {}
+          @data[x][y] = value
+          
+      unset: (x,y) ->
+        delete @data[x]?[y]
+
+      length: ->
+        sum = 0
+        for index, row of @data
+          for index, column of row
+            sum++
+        sum
+      foreach: -> (func, 
+           
+    </script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+    <script type="text/javascript" src="http://jashkenas.github.com/coffee-script/extras/coffee-script.js"></script> 
+  </head>
+
+  <body id="index" class="home">
+  </body>
+</html>
+
