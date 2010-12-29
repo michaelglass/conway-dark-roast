@@ -3,12 +3,22 @@
   <head>
     <meta charset="utf-8" />
     <title>Conway on Coffee!</title>
-   
+
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
-    
+    <script type="text/javascript" src="src/SparseMatrix.js"></script>
+    <script type="text/javascript" src="src/LifeState.js"></script>
+    <script type="text/javascript" src="src/Screen.js"></script>
+    <script type="text/javascript" src="src/Application.js"></script>
   </head>
 
   <body id="index" class="home">
+    <canvas id="screen" width='1024' height='768'></canvas>
+    <p>
+      <a href="#" id="tick">tick</a> | 
+      <a href="#" id="toggle">toggle</a> | 
+      <a href="#" id="clear">clear</a> | 
+      <a href="#" id="randomize">randomize</a> | 
+     </p>
   </body>
 </html>
 
