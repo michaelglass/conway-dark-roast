@@ -15,27 +15,32 @@ class LifeScreen
     @running = false
 
   setupGrid: ->
-    for x in [0.5..(@canvas.width()+0.5)] by @cells.pixelsPer
+    @context.beginPath()
+    for x in [(0.5+(@cells.pixelsLeft % @cells.pixelsPer))..(@canvas.width()+0.5)] by @cells.pixelsPer
       @context.moveTo(x,0)
       @context.lineTo(x,@canvas.height())
-    for y in [0.5..(@canvas.height()+0.5)] by @cells.pixelsPer
+    for y in [(0.5+(@cells.pixelsTop % @cells.pixelsPer))..(@canvas.height()+0.5)] by @cells.pixelsPer
       @context.moveTo(0,y)
       @context.lineTo(@canvas.width(),y)
     @context.strokeStyle = '#ddd'
 
-  drawGrid: ->
+  strokeGrid: ->
     @context.stroke()
+
+  drawGrid: ->
+    @setupGrid()
+    @strokeGrid()
     
   refreshCells: ->
     @clearCells()
     @drawCells()
   
   drawCells: ->
-    for x_ind in [0..(@canvas.width()/@cells.pixelsPer)]
-      for y_ind in [0..(@canvas.height()/@cells.pixelsPer)]
+    for x_ind in [Math.floor(-1*@cells.pixelsLeft/@cells.pixelsPer)..Math.floor((@canvas.width()-@cells.pixelsLeft)/@cells.pixelsPer)]
+      for y_ind in [Math.floor(-1*@cells.pixelsTop/@cells.pixelsPer)..Math.floor((@canvas.height()-@cells.pixelsTop)/@cells.pixelsPer)]
         if @state.isAlive(x_ind, y_ind)
-          x = x_ind * @cells.pixelsPer + 1.5
-          y = y_ind * @cells.pixelsPer + 1.5
+          x = x_ind * @cells.pixelsPer + 1.5 + @cells.pixelsLeft
+          y = y_ind * @cells.pixelsPer + 1.5 + @cells.pixelsTop
           args = [x,y,@cells.pixelsPer-1.5, @cells.pixelsPer-1.5]
           @context.fillRect(args...)
   
@@ -62,5 +67,14 @@ class LifeScreen
     if @running
       @tick()
       setTimeout( (=> @run(true)), @speed )
+
+  pan: (x_offset, y_offset) ->
+    @cells.pixelsLeft += x_offset
+    @cells.pixelsTop += y_offset
+    $('#console').append  ( "(#{@cells.pixelsLeft},#{@cells.pixelsTop})\n#{Math.floor(@cells.pixelsLeft/@cells.pixelsPer)}..#{Math.floor((@cells.pixelsLeft+@canvas.width())/@cells.pixelsPer)}\n")
+
+  zoom: (percentChange) ->
+    @cells.pixelsPer *= percentChange/100
+    @cells.pixelsPer = 2 if @cells.pixelsPer < 2
 
 this.LifeScreen = LifeScreen

@@ -29,7 +29,7 @@
       screen.refreshCells();
       return false;
     });
-    return $('#randomize').click(function() {
+    $('#randomize').click(function() {
       var _i, _j, _ref, _ref2, _results, _results2;
       screen.stop();
       delete screen.tate;
@@ -45,6 +45,31 @@
       }).call(this));
       screen.refreshCells();
       return false;
+    });
+    $('#speed').change(function() {
+      var new_speed;
+      new_speed = parseInt($(this).val());
+      if (new_speed > 0) {
+        return screen.speed = new_speed;
+      }
+    });
+    $('#left').click(function() {
+      return screen.pan(1, 0);
+    });
+    $('#right').click(function() {
+      return screen.pan(-1, 0);
+    });
+    $('#up').click(function() {
+      return screen.pan(0, 1);
+    });
+    $('#down').click(function() {
+      return screen.pan(0, -1);
+    });
+    $('#zoomin').click(function() {
+      return screen.zoom(150);
+    });
+    return $('#zoomout').click(function() {
+      return screen.zoom(50);
     });
   });
   randomizeLife = function(state, range_x, range_y) {
