@@ -1,19 +1,24 @@
 (function() {
-  var randomizeLife;
+  var clearScreen, randomizeLife, randomizeScreen;
   $(document).ready(function() {
-    var canvas, screen, state, _i, _j, _ref, _ref2, _results, _results2;
-    state = new LifeState;
-    canvas = $('#screen');
-    randomizeLife(state, (function() {
+    var canvas, screen, _i, _j, _results, _results2;
+    screen = new LifeScreen('#screen', new LifeState);
+    randomizeScreen(screen, (function() {
       _results = [];
-      for (var _i = 0, _ref = Math.ceil(canvas.width() / 8); 0 <= _ref ? _i <= _ref : _i >= _ref; 0 <= _ref ? _i += 1 : _i -= 1){ _results.push(_i); }
+      for (_i = 50; _i <= 100; _i++){ _results.push(_i); }
       return _results;
     }).call(this), (function() {
       _results2 = [];
-      for (var _j = 0, _ref2 = Math.ceil(canvas.height() / 8); 0 <= _ref2 ? _j <= _ref2 : _j >= _ref2; 0 <= _ref2 ? _j += 1 : _j -= 1){ _results2.push(_j); }
+      for (_j = 25; _j <= 50; _j++){ _results2.push(_j); }
       return _results2;
     }).call(this));
-    screen = new LifeScreen('#screen', state);
+    setInterval((function() {
+      return $('#fps').text(screen.realFPS);
+    }), 1000);
+    setInterval((function() {
+      return $('#tickFps').text(screen.tickFPS);
+    }), 1000);
+    canvas = $('#screen');
     $('#tick').click(function() {
       screen.tick();
       return false;
@@ -23,30 +28,65 @@
       return false;
     });
     $('#clear').click(function() {
-      screen.stop();
-      delete screen.state;
-      screen.state = new LifeState;
-      screen.refreshCells();
+      clearScreen(screen);
       return false;
     });
-    return $('#randomize').click(function() {
-      var _i, _j, _ref, _ref2, _results, _results2;
-      screen.stop();
-      delete screen.tate;
-      screen.state = new LifeState;
-      randomizeLife(screen.state, (function() {
+    $('#randomize').click(function() {
+      var _i, _j, _results, _results2;
+      randomizeScreen(screen, (function() {
         _results = [];
-        for (var _i = 0, _ref = Math.ceil(canvas.width() / 8); 0 <= _ref ? _i <= _ref : _i >= _ref; 0 <= _ref ? _i += 1 : _i -= 1){ _results.push(_i); }
+        for (_i = 50; _i <= 100; _i++){ _results.push(_i); }
         return _results;
       }).call(this), (function() {
         _results2 = [];
-        for (var _j = 0, _ref2 = Math.ceil(canvas.height() / 8); 0 <= _ref2 ? _j <= _ref2 : _j >= _ref2; 0 <= _ref2 ? _j += 1 : _j -= 1){ _results2.push(_j); }
+        for (_j = 25; _j <= 50; _j++){ _results2.push(_j); }
         return _results2;
       }).call(this));
-      screen.refreshCells();
       return false;
     });
+    $('#speed').change(function() {
+      var new_speed;
+      new_speed = parseInt($(this).val());
+      if (new_speed > 0) {
+        return screen.speed = new_speed;
+      }
+    });
+    $('#left').click(function() {
+      return screen.pan(1, 0);
+    });
+    $('#right').click(function() {
+      return screen.pan(-1, 0);
+    });
+    $('#up').click(function() {
+      return screen.pan(0, 1);
+    });
+    $('#down').click(function() {
+      return screen.pan(0, -1);
+    });
+    $('#zoomin').click(function() {
+      return screen.zoom(150);
+    });
+    $('#zoomout').click(function() {
+      return screen.zoom(50);
+    });
+    return canvas.mousewheel(function(event, delta) {
+      return screen.zoom(100 + (delta * -1 * 10));
+    });
   });
+  clearScreen = function(screen) {
+    var newState, oldState;
+    screen.stop();
+    newState = new LifeState;
+    oldState = screen.state;
+    screen.state = newState;
+    if (oldState != null) {
+      return delete oldState;
+    }
+  };
+  randomizeScreen = function(screen, range_x, range_y) {
+    clearScreen(screen);
+    return randomizeLife(screen.state, range_x, range_y);
+  };
   randomizeLife = function(state, range_x, range_y) {
     var x, y, _i, _len, _results;
     _results = [];
