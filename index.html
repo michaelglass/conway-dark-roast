@@ -5,6 +5,7 @@
     <title>Conway on Coffee!</title>
 
     <script type="text/javascript" src="src/jquery.min.js"></script>
+    <script type="text/javascript" src="src/jquery.mousewheel.min.js"></script>
     <script type="text/javascript" src="src/SparseMatrix.js"></script>
     <script type="text/javascript" src="src/LifeState.js"></script>
     <script type="text/javascript" src="src/Screen.js"></script>
@@ -13,6 +14,9 @@
 
   <body id="index" class="home">
     <canvas id="screen" width='1024' height='768'></canvas>
+    <p><span id="fps"></span> real FPS
+      <span id="tickFps"></span> render FPS <br>
+    </p>
     <p>
       <a href="#" id="tick">tick</a> | 
       <a href="#" id="toggle">toggle</a> | 
@@ -25,8 +29,6 @@
       <a href="#" id="down">↓</a> |
       <a href="#" id="zoomin">+</a> |
       <a href="#" id="zoomout">-</a><br>
-
-      <textarea id="console" disabled=true height=50></textarea>
      </p>
   </body>
 </html>

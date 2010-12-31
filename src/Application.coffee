@@ -1,8 +1,11 @@
 $(document).ready ->
-  state = new LifeState
+  screen = new LifeScreen '#screen', new LifeState
+  randomizeScreen(screen, [50..100], [25..50])
+  
+  setInterval((-> $('#fps').text(screen.realFPS)), 1000)
+  setInterval((-> $('#tickFps').text(screen.tickFPS)), 1000)
   canvas = $('#screen')
-  randomizeLife(state, [0..Math.ceil(canvas.width()/8)], [0..Math.ceil(canvas.height()/8)])
-  screen = new LifeScreen '#screen', state
+
   $('#tick').click ->
     screen.tick()
     false
@@ -12,19 +15,13 @@ $(document).ready ->
     false
 
   $('#clear').click ->
-    screen.stop()
-    delete screen.state
-    screen.state = new LifeState
-    screen.refreshCells()
+    clearScreen(screen)
     false
 
   $('#randomize').click ->
-    screen.stop()
-    delete screen.tate
-    screen.state = new LifeState
-    randomizeLife(screen.state, [0..Math.ceil(canvas.width()/8)], [0..Math.ceil(canvas.height()/8)])
-    screen.refreshCells()
+    randomizeScreen(screen, [50..100], [25..50])
     false
+
   $('#speed').change ->
     new_speed = parseInt($(this).val())
     if new_speed > 0
@@ -42,7 +39,21 @@ $(document).ready ->
     screen.zoom(150)
   $('#zoomout').click ->
     screen.zoom(50)
+  canvas.mousewheel (event, delta) ->
+    #-0.015 -> 105
+    #0.015 -> 95
+    screen.zoom(100 + (delta * -1 * 10))
 
+clearScreen = (screen) ->
+  screen.stop()
+  newState = new LifeState
+  oldState = screen.state
+  screen.state = newState
+  delete oldState if oldState?
+
+randomizeScreen = (screen, range_x, range_y) ->
+  clearScreen(screen)
+  randomizeLife(screen.state, range_x, range_y)
 
 randomizeLife = (state, range_x, range_y)  ->
   for x in range_x
