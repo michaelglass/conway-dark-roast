@@ -1,15 +1,41 @@
+#clears the game board
+clearScreen = (screen) ->
+  #stop ticking
+  screen.stop()
+  
+  #reset state
+  newState = new LifeState
+  oldState = screen.state
+  screen.state = newState
+  #trash the old one, maybe this isn't necessary, javascript noob, 
+  #don't totally understand GC.
+  delete oldState if oldState?
+
+#randomly populates life in screen over range_x, range_y 
+randomizeScreen = (screen, range_x, range_y) ->
+  clearScreen(screen)
+  for x in range_x
+    for y in range_y
+      screen.state.spawn(x,y) if Math.random() > 0.5
+      
+
 $(document).ready ->
+  #create the screen
   screen = new LifeScreen '#screen', new LifeState
+  
+  #and populate it
   randomizeScreen(screen, [50..100], [25..50])
   
+  #update the fps once a second
   setInterval((-> $('#fps').text(screen.realFPS)), 1000)
   setInterval((-> $('#tickFps').text(screen.tickFPS)), 1000)
-  canvas = $('#screen')
 
+  #tick moves the state of the game one generation forward
   $('#tick').click ->
     screen.tick()
     false
   
+  #stops or starts auto ticking
   $('#toggle').click ->
     screen.toggle()
     false
@@ -18,10 +44,12 @@ $(document).ready ->
     clearScreen(screen)
     false
 
+  #randomizes current state (ie, clears; creates a bunch of life)
   $('#randomize').click ->
     randomizeScreen(screen, [50..100], [25..50])
     false
-
+  
+  #... self explanatory
   $('#speed').change ->
     new_speed = parseInt($(this).val())
     if new_speed > 0
@@ -39,23 +67,5 @@ $(document).ready ->
     screen.zoom(150)
   $('#zoomout').click ->
     screen.zoom(50)
-  canvas.mousewheel (event, delta) ->
-    #-0.015 -> 105
-    #0.015 -> 95
+  $('#screen').mousewheel (event, delta) ->
     screen.zoom(100 + (delta * -1 * 10))
-
-clearScreen = (screen) ->
-  screen.stop()
-  newState = new LifeState
-  oldState = screen.state
-  screen.state = newState
-  delete oldState if oldState?
-
-randomizeScreen = (screen, range_x, range_y) ->
-  clearScreen(screen)
-  randomizeLife(screen.state, range_x, range_y)
-
-randomizeLife = (state, range_x, range_y)  ->
-  for x in range_x
-    for y in range_y
-      state.spawn(x,y) if Math.random() > 0.5
