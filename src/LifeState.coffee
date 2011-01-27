@@ -13,10 +13,11 @@ class LifeState extends SparseMatrix
   # note:  this is effectively private static.
   # creates SparseMatrix with the counts for all neighbors of current state
   # used to compute next state.
+  # countNeighbors: ->
   countNeighbors = (state)->
     #create a new sparse matrix
     neighbors = new SparseMatrix
-
+    # @each (x,y) ->
     state.each (x,y) ->
       #for all living neighbors of x,y
       for x_offset in [-1..1]
@@ -35,6 +36,7 @@ class LifeState extends SparseMatrix
   # moves state forward one step.
   tick: ->
     neighbors = countNeighbors(this)
+    # neighbors = @countNeighbors()
     next_state = new LifeState
     neighbors.each (x,y,num_neighbors) =>
       if num_neighbors == 2 && @isAlive(x,y)
