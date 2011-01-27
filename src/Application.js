@@ -1,7 +1,35 @@
 (function() {
-  var clearScreen, randomizeLife, randomizeScreen;
+  var clearScreen, randomizeScreen;
+  clearScreen = function(screen) {
+    var newState, oldState;
+    screen.stop();
+    newState = new LifeState;
+    oldState = screen.state;
+    screen.state = newState;
+    if (oldState != null) {
+      return delete oldState;
+    }
+  };
+  randomizeScreen = function(screen, range_x, range_y) {
+    var x, y, _i, _len, _results;
+    clearScreen(screen);
+    _results = [];
+    for (_i = 0, _len = range_x.length; _i < _len; _i++) {
+      x = range_x[_i];
+      _results.push((function() {
+        var _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = range_y.length; _i < _len; _i++) {
+          y = range_y[_i];
+          _results.push(Math.random() > 0.5 ? screen.state.spawn(x, y) : void 0);
+        }
+        return _results;
+      })());
+    }
+    return _results;
+  };
   $(document).ready(function() {
-    var canvas, screen, _i, _j, _results, _results2;
+    var screen, _i, _j, _results, _results2;
     screen = new LifeScreen('#screen', new LifeState);
     randomizeScreen(screen, (function() {
       _results = [];
@@ -18,7 +46,6 @@
     setInterval((function() {
       return $('#tickFps').text(screen.tickFPS);
     }), 1000);
-    canvas = $('#screen');
     $('#tick').click(function() {
       screen.tick();
       return false;
@@ -69,39 +96,8 @@
     $('#zoomout').click(function() {
       return screen.zoom(50);
     });
-    return canvas.mousewheel(function(event, delta) {
+    return $('#screen').mousewheel(function(event, delta) {
       return screen.zoom(100 + (delta * -1 * 10));
     });
   });
-  clearScreen = function(screen) {
-    var newState, oldState;
-    screen.stop();
-    newState = new LifeState;
-    oldState = screen.state;
-    screen.state = newState;
-    if (oldState != null) {
-      return delete oldState;
-    }
-  };
-  randomizeScreen = function(screen, range_x, range_y) {
-    clearScreen(screen);
-    return randomizeLife(screen.state, range_x, range_y);
-  };
-  randomizeLife = function(state, range_x, range_y) {
-    var x, y, _i, _len, _results;
-    _results = [];
-    for (_i = 0, _len = range_x.length; _i < _len; _i++) {
-      x = range_x[_i];
-      _results.push((function() {
-        var _i, _len, _results;
-        _results = [];
-        for (_i = 0, _len = range_y.length; _i < _len; _i++) {
-          y = range_y[_i];
-          _results.push(Math.random() > 0.5 ? state.spawn(x, y) : void 0);
-        }
-        return _results;
-      })());
-    }
-    return _results;
-  };
 }).call(this);

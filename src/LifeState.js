@@ -9,6 +9,7 @@
     return child;
   }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   LifeState = (function() {
+    var countNeighbors;
     function LifeState() {
       LifeState.__super__.constructor.apply(this, arguments);
     }
@@ -22,10 +23,10 @@
     LifeState.prototype.isAlive = function(x, y) {
       return this.get(x, y);
     };
-    LifeState.prototype.countNeighbors = function() {
+    countNeighbors = function(state) {
       var neighbors;
       neighbors = new SparseMatrix;
-      this.each(function(x, y) {
+      state.each(function(x, y) {
         var my_x, my_y, num_neighbors, x_offset, y_offset, _ref, _ref2;
         for (x_offset = _ref = -1; (_ref <= 1 ? x_offset <= 1 : x_offset >= 1); (_ref <= 1 ? x_offset += 1 : x_offset -= 1)) {
           for (y_offset = _ref2 = -1; (_ref2 <= 1 ? y_offset <= 1 : y_offset >= 1); (_ref2 <= 1 ? y_offset += 1 : y_offset -= 1)) {
@@ -43,7 +44,7 @@
     };
     LifeState.prototype.tick = function() {
       var neighbors, next_state;
-      neighbors = this.countNeighbors();
+      neighbors = countNeighbors(this);
       next_state = new LifeState;
       neighbors.each(__bind(function(x, y, num_neighbors) {
         if (num_neighbors === 2 && this.isAlive(x, y)) {

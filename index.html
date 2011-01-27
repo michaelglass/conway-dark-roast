@@ -4,16 +4,24 @@
     <meta charset="utf-8" />
     <title>Conway on Coffee!</title>
 
+
+   <style> 
+      canvas.lifeScreen {
+        position: absolute;
+        top: 30;
+        left: 10;
+      }
+    </style> 
+
     <script type="text/javascript" src="src/jquery.min.js"></script>
     <script type="text/javascript" src="src/jquery.mousewheel.min.js"></script>
     <script type="text/javascript" src="src/SparseMatrix.js"></script>
     <script type="text/javascript" src="src/LifeState.js"></script>
-    <script type="text/javascript" src="src/Screen.js"></script>
+    <script type="text/javascript" src="src/LifeScreen.js"></script>
     <script type="text/javascript" src="src/Application.js"></script>
   </head>
 
   <body id="index" class="home">
-    <canvas id="screen" width='1024' height='768'></canvas>
     <p><span id="fps"></span> real FPS
       <span id="tickFps"></span> render FPS <br>
     </p>
@@ -30,6 +38,7 @@
       <a href="#" id="zoomin">+</a> |
       <a href="#" id="zoomout">-</a><br>
      </p>
+    <div id="screen"></div>
   </body>
 </html>
 
